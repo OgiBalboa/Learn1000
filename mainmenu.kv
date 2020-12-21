@@ -1,0 +1,905 @@
+#:import Label kivy.core.text.Label
+#:set _label_basic Label(text="%{}",font_size=mm(4))
+#:set _label_common Label(text="%{}",font_size=mm(4))
+#:set _label_rare Label(text="%{}",font_size=mm(4))
+#:set _label_advantage Label(text="%{}",font_size=mm(4))
+WindowManager:
+    id:wmgr
+    HelloScreen:
+    LoadScreen:
+	MainMenu:
+	Learn:
+	Quiz:
+	Knowns:
+	Settings_:
+	Draft:
+<HelloScreen>:
+    name:"hello"
+    focus : False
+    GridLayout:
+        cols:1
+        Button:
+            background_normal : "_bin/pics/startscreen.png"
+            background_down : "_bin/pics/startscreen.png"
+            on_release:
+                root.popup()
+                if root.hello_() == True: app.root.current = "main"
+                elif root.hello_() == None: app.root.current = "draft"
+                else: app.root.current = "load"
+
+<LoadScreen>:
+    name:"load"
+    user_name_:user_name_
+    FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: '_bin/pics/mainbg.png'
+        Label :
+            text : "Language :"
+            pos_hint:{"x":0,"y":0.94}
+            font_size : mm(root.sizes.font+2)
+            text_size: self.size
+            size_hint : 0.5,0.5
+        ToggleButton:
+            pos_hint:{"x":0.25,"y":0.93}
+            size_hint : None,None
+            group : "lang"
+            height: mm(root.sizes.picture-1)
+            width : mm(root.sizes.picture-1)
+            background_normal : "_bin/pics/turk.png"
+            background_down : "_bin/pics/turk_down.png"
+            on_release : root.set_lang("Turkish")
+        ToggleButton:
+            pos_hint:{"x":0.35,"y":0.93}
+            size_hint : None,None
+            group : "lang"
+            height: mm(root.sizes.picture-1)
+            width : mm(root.sizes.picture-1)
+            background_normal : "_bin/pics/eng.png"
+            background_down : "_bin/pics/eng_down.png"
+            on_release : root.set_lang("English")
+        Label:
+            text :"Hoş Geldiniz.... Kurulum için aşağıdaki bilgileri giriniz."
+            text_size: self.size
+            color: 0,0.5,1,1
+            pos_hint:{"x":0,"y":0.77}
+            font_size : 20
+        Label :
+            text: "İsim :"
+            color: 0,0.5,1,1
+            pos_hint:{"x":0,"y":0.64}
+            text_size: self.size
+            font_size : 20
+        TextInput:
+            id:user_name_
+            multiline: False
+            pos_hint:{"x":0.3,"y":0.64}
+            height : mm(7)
+            width : mm(40)
+            size_hint : None,None
+            font_size:mm(root.sizes.font-1)
+        Label:
+            text: "Kelime öğrenmeyi istediğiniz dili seçiniz."
+            color: 0,0.5,1,1
+            text_size: self.size
+            pos_hint:{"x":0,"y":0.55}
+            size_hint : 0.7,0.1
+            font_size : mm(root.sizes.font)
+        Button:
+            id:btn
+            on_parent: dropdown.dismiss()
+            text : "<Dil Seçiniz>"
+            pos_hint:{"x":0.75,"y":0.55}
+            background_color: 0,1,1,1
+            size_hint_x : 0.25
+            size_hint_y :None
+            height : 44
+            on_release:
+                dropdown.open(self)
+                ger.text = root.lgp.text('Almanca')
+
+        DropDown:
+            id: dropdown
+            on_select: btn.text = '{}'.format(args[1])
+            Button:
+                id:ger
+                text: 'Almanca'
+                size_hint_x : 0.25
+                size_hint_y : None
+                height : 44
+                background_color: 0,1,1,1
+                on_release:
+                    dropdown.select(root.lgp.text('Almanca'))
+                    root.set_dict("German")
+
+        Label:
+            text: "Çalışmak için ayıracağınız süre ?\n(Daha sonra tekrar değiştirebilirsiniz.)"
+            text_size: self.width,None
+            color: 0,0.5,1,1
+            pos_hint:{"x":0,"y":0.4}
+            size_hint : 0.8,0.1
+            font_size : mm(root.sizes.font)
+        Button:
+            id:btn2
+            on_parent: dropdown2.dismiss()
+            text : "<Süre Seçiniz>"
+            pos_hint:{"x":0.75,"y":0.42}
+            background_color: 0,1,1,1
+            size_hint_x : 0.25
+            size_hint_y :None
+            height : 44
+            on_release:
+                dropdown2.open(self)
+                btaz.text = root.lgp.text('0-10 dk')
+                btort.text = root.lgp.text('10-60 dk')
+                btcok.text = root.lgp.text('60 dkdan fazla')
+
+        DropDown2:
+            id: dropdown2
+            on_select: btn2.text = '{}'.format(args[1])
+            Button:
+                id : btaz
+                text: root.lgp.text('0-10 dk')
+                size_hint_x : 0.25
+                size_hint_y : None
+                height : 44
+                background_color: 0,1,1,1
+                on_release:
+                    dropdown2.select(root.lgp.text('0-10 dk'))
+                    root.set_learnlimit("az")
+            Button:
+                id : btort
+                text: root.lgp.text('10-60 dk')
+                size_hint_x : 0.25
+                size_hint_y : None
+                height : 44
+                background_color: 0,1,1,1
+                on_release:
+                    dropdown2.select(root.lgp.text('10-60 dk'))
+                    root.set_learnlimit("orta")
+            Button:
+                id:btcok
+                text: root.lgp.text('60 dkdan fazla')
+                size_hint_x : 0.25
+                size_hint_y : None
+                height : 44
+                background_color: 0,1,1,1
+                on_release:
+                    dropdown2.select(root.lgp.text('60 dkdan fazla'))
+                    root.set_learnlimit("cok",)
+        Button:
+            text : "Onayla"
+            pos_hint:{"center_x":0.5,"y":0.2}
+            background_color: 0,0.5,1,1
+            size_hint_x : 0.2
+            size_hint_y :None
+            height : 44
+            on_release:
+                if root.load_conf(name = user_name_.text,dbname =btn.text) is True:app.root.current = "main"
+                app.root.transition.direction = "right"
+
+<MainMenu>:
+	name:"main"
+	user_info:user_info
+	scr:scr
+	pbar:pbar
+    pbar_primary:pbar_primary
+	on_pre_enter : root.upd()
+	FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: '_bin/pics/mainbg.png'
+        Label:
+        	text : "Ulan Font Size : " + str(root.sizes.font) + " Pic Size : " +str(root.sizes.picture)+"\nWokrDir : " + str(root.wd)
+            font_size : mm(root.sizes.font)
+            pos_hint:{"x":0,"y":0.2}       	
+        Label:
+            id:user_info
+            font_size : mm(root.sizes.font)
+            pos_hint:{"x":0,"y":0.4}
+        Label :
+            id:pbar
+            font_size : mm(root.sizes.font)
+            pos_hint:{"x":0.23,"y":0.71}
+            size_hint : None,None
+            halign : "left"
+            text:"vayaq"
+        CircularProgressBar:
+            text_size : None,None
+            id : pbar_primary
+            thickness: 3
+            cap_style: "RouND"
+            progress_colour: "011"
+            background_colour: "000"
+            cap_precision: 3
+            max: 1000
+            min: 0
+            widget_size: 35
+            label: _label_basic
+            pos:280,620
+        Button:
+            background_normal: "_bin/pics/showmore.png"
+            background_down: "_bin/pics/showmore.png"
+            pos:320,620
+            on_release : root.show_progress()
+            size_hint : None,None
+            height: mm(10)
+            width : mm(10)
+		Label:
+		    id:scr
+			text:""
+            size_hint_y: None
+            font_size : mm(root.sizes.font)
+            height: self.texture_size[1]
+            text_size: self.width,None
+			halign: 'left'
+            valign: 'center'
+            pos_hint:{"x":0.5,"y":0.6}
+		Button:
+            pos_hint:{"x":0.12,"y":0.4}
+            size_hint : None,None
+            height: mm(root.sizes.picture)
+            width : mm(root.sizes.picture)
+            background_normal : "_bin/pics/learn.png"
+            background_down : "_bin/pics/learn.png"
+			on_release:
+				app.root.current = "learn"
+				app.root.transition.direction = "left"
+		Label :
+            pos_hint:{"x":0.14,"y":0.37}
+            text: "Öğren !"
+            font_size : mm(root.sizes.font)
+            text_size: self.size
+            color : 1,1,0,1
+		Button:
+            pos_hint:{"x":0.7,"y":0.4}
+            size_hint : None,None
+            height: mm(root.sizes.picture+5)
+            width : mm(root.sizes.picture+5)
+            background_normal : "_bin/pics/shelf.png"
+            background_down : "_bin/pics/shelf.png"
+			on_release:
+				app.root.current = "knowns"
+				app.root.transition.direction = "left"
+		Label:
+            pos_hint:{"x":0.67,"y":0.37}
+            text: "Durumu Görüntüle"
+            text_size: self.size
+            font_size : mm(root.sizes.font)
+            color : 1,1,0,1
+		Button:
+            pos_hint:{"x":0.09,"y":0.2}
+            size_hint : None,None
+            height: mm(root.sizes.picture+12)
+            width : mm(root.sizes.picture+12)
+            background_normal : "_bin/pics/quiz.png"
+            background_down : "_bin/pics/quiz.png"
+			on_release:
+				app.root.current = "quiz"
+				app.root.transition.direction = "left"
+		Label :
+            pos_hint:{"x":0.15,"y":0.2}
+            text: "Quiz"
+            text_size: self.size
+            font_size : mm(root.sizes.font)
+            color : 1,1,0,1
+		Button:
+            pos_hint:{"x":0.68,"y":0.23}
+            size_hint : None,None
+            height: mm(root.sizes.picture+8)
+            width : mm(root.sizes.picture+8)
+            background_normal : "_bin/pics/settings.png"
+            background_down : "_bin/pics/settings.png"
+			on_release:
+				app.root.current = "settings"
+				app.root.transition.direction = "left"
+		Label :
+            pos_hint:{"x":0.71,"y":0.2}
+            text: "Ayarlar"
+            text_size: self.size
+            font_size : mm(root.sizes.font)
+            color : 1,1,0,1
+
+		Label :
+            pos_hint:{"x":0.02,"y":0.01}
+            text: "Uygulama geliştirme aşamasındadır, lütfen öneri ve şikayetlerinizi ogibalboa@outlook.com adresinden ulaştırınız."
+            text_size: root.size
+            size: self.texture_size
+            font_size : mm(root.sizes.font-1)
+            color : 1,1,0,1
+
+<Learn>:
+	name:"learn"
+	word:word
+	translate:translate
+	_word_:_word_
+	_tr_:_tr_
+	FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: '_bin/pics/bg_germany.png'
+		Label :
+		    pos_hint :{"x":0.8,"y":0.7}
+		    text_size: self.size
+		    text : "Dinle"
+		    fon_size : mm(root.sizes.font-2)
+		Button:
+			pos_hint:{"x":0.75,"y":0.6}
+			size_hint : 0.16,0.1
+			background_normal : "_bin/pics/pronounce.png"
+			background_down : "_bin/pics/pronounce.png"
+			on_release:
+				root.click()
+		Button:
+            size_hint : None,None
+            height: mm(root.sizes.picture+2)
+            width : mm(root.sizes.picture+2)
+			pos_hint:{"x":0.4,"y":0.015}
+			background_normal : "_bin/pics/home.png"
+			background_down : "_bin/pics/home.png"
+			on_release :
+				root.reset()
+				app.root.current = "main"
+				app.root.transition.direction = "left"
+		Button:
+            pos_hint:{"x":0.75,"y":0.45}
+            size_hint : 0.15,0.1
+			background_normal : "_bin/pics/next.png"
+			background_down : "_bin/pics/next.png"
+			on_release: root.next_()
+		Label:
+		    id : _word_
+			text: "Başlamak için Next'e basınız"
+			text_size: self.size
+			font_size : mm(root.sizes.font)
+			pos_hint:{"x":0.05,"y":0.63}
+			color : 0,0.5,1,1
+		Label:
+			id:word
+			text : ""
+			text_size: self.size
+			font_size : mm(root.sizes.font)
+			pos_hint:{"x":0.4,"y":0.63}
+			color : 0,0.5,1,1
+		Label:
+		    id:_tr_
+			text: "Çevirisi : "
+			text_size: self.size
+			font_size :mm(root.sizes.font)
+			pos_hint:{"x":0.05,"y":0.5}
+			color : 0,0.5,1,1
+			size_hint : 1,1
+		Label:
+			id:translate
+			font_size : mm(root.sizes.font)
+			text: ""
+			text_size: self.size
+			pos_hint:{"x":0.4,"y":0.5}
+			color : 0,0.5,1,1
+
+<Quiz>:
+	name:"quiz"
+	answer: answer
+	info:info
+	query:query
+	acpt:acpt
+	on_pre_enter:
+	    root.quiz_difficulty()
+	FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: '_bin/pics/bg_germany.png'
+	GridLayout :
+		cols:1
+		size : root.width, root.height
+		Label:
+			id : query
+			text: ""
+			font_size : mm(root.sizes.font)
+			text_size : self.size
+			halign : "center"
+			valign : "center"
+			background_color : 0.7,0.2,0.2,1
+			color : 1,1,1,1
+        Button:
+            id:acpt
+		    size_hint: 0.3,0.1
+		    background_color : 1,0,1,1
+		    text:"Doğru Kabul Et !"
+		    font_size:mm(root.sizes.font)
+		    on_release : root.accept_as_true()
+		    opacity : 0
+		GridLayout:
+			cols:2
+			size_hint : root.width,0.2
+			Button:
+				text : "Onayla"
+				on_press :
+				    root.ok()
+				    answer.focus = True
+				size_hint : 0.5,0.2
+				background_color:  0.3,0.4,0.5,1
+
+			TextInput:
+				id : answer
+				text : ""
+				font_size : mm(root.sizes.font)
+		Label:
+			id: info
+			color : 0.1,0.1,0.1,1
+			font_size : mm(root.sizes.font)
+			text_size : self.size
+			text : "Hoş Geldiniz\nBaşlamak için 'Onayla' butonuna basınız"
+			valign : "center"
+			halign : "center"
+
+	FloatLayout	:
+		Button:
+			pos_hint:{"center_x":0.5,"y":0.01}
+			background_normal : "_bin/pics/home.png"
+			background_down : "_bin/pics/home.png"
+            size_hint : None,None
+            height: mm(root.sizes.picture+2)
+            width : mm(root.sizes.picture+2)
+			on_release :
+				root.reset()
+				app.root.current = "main"
+				app.root.transition.direction = "left"
+<Knowns>:
+	name :"knowns"
+	info : info
+	known_words:known_words
+	known_tcount:known_tcount
+	known_fcount:known_fcount
+	known_prg:known_prg
+	known_pc:known_pc
+	infotext:infotext
+	layout_content:layout_content
+	on_pre_enter: root.show()
+    FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: '_bin/pics/mainbg.png'
+		Button:
+			background_normal : "_bin/pics/home.png"
+			background_down : "_bin/pics/home.png"
+            size_hint : None,None
+            height: mm(root.sizes.picture+2)
+            width : mm(root.sizes.picture+2)
+			pos_hint: {"x":.8,"y":0.04}
+			on_release :
+				app.root.current = "main"
+				app.root.transition.direction = "left"
+
+
+    GridLayout:
+        cols :1
+        Label :
+            id : infotext
+            text:"Kelime         Doğru Sayısı        Yanlış Sayısı        Durum       İlerleme"
+            font_size : mm(root.sizes.font)
+            size_hint: 0.5,0.1
+            halign:"left"
+        GridLayout:
+            cols:1
+            size_hint:2,4
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                GridLayout:
+                    id: layout_content
+                    cols : 5
+                    size_hint_y: None
+
+                    Label:
+                        id : known_words
+                        size_hint_y: None
+                        size_hint_x : 1.1
+                        font_size : mm(root.sizes.font)
+                        height: self.texture_size[1]
+                        color : 1,1,0,1
+                        text: ""
+
+                    Label:
+                        id : known_tcount
+                        size_hint_y: None
+                        font_size : mm(root.sizes.font)
+                        height: self.texture_size[1]
+                        text_size: self.width,None
+                        color : 0,0.5,0,1
+                        text: ""
+                        halign : "center"
+
+                    Label:
+                        id : known_fcount
+                        size_hint_y: None
+                        font_size : mm(root.sizes.font)
+                        height: self.texture_size[1]
+                        text_size: self.width,None
+                        color : 0.6,0,0.2,1
+                        text: ""
+                        halign: "center"
+
+                    Label:
+                        id : known_prg
+                        size_hint_y: None
+                        font_size : mm(root.sizes.font)
+                        height: self.texture_size[1]
+                        text_size: self.width,None
+                        color : 1,1,0,1
+                        halign : "center"
+                        text: ""
+
+                    Label:
+                        id : known_pc
+                        size_hint_y: None
+                        font_size : mm(root.sizes.font)
+                        height: self.texture_size[1]
+                        text_size: self.width,None
+                        color : 1,1,0,1
+                        text: ""
+                        halign : "center"
+            Label:
+                text: ""
+                font_size : 22
+                size_hint: 0.2,0.35
+                valign:"top"
+                halign: "right"
+
+    FloatLayout:
+        Label:
+            id : info
+            text: ""
+            font_size : mm(root.sizes.font)
+            text_size: self.width,None
+            size: self.texture_size
+            pos_hint: {"x":0,"center_y":0.2}
+            valign: "bottom"
+            halign : "left"
+        GridLayout:
+            cols: 5
+            size_hint : 0.7,0.1
+            pos_hint: {"x":.02,"y":0.01}
+            Button:
+                text : "Hepsini Göster"
+                text_size : self.size
+                font_size : mm(root.sizes.font-1)
+                valign:"center"
+                halign : "center"
+                background_color:0,0.7,0,1
+                on_release:
+                    root.show()
+            Button:
+                text : "Temel Kelimeleri Göster"
+                text_size : self.size
+                font_size : mm(root.sizes.font-1)
+                valign:"center"
+                halign : "center"
+                background_color:0,0.7,0,1
+                on_release:
+                    root.show("basic")
+            Button:
+                text : "Yaygın Kelimeleri Göster"
+                text_size : self.size
+                valign:"center"
+                halign : "center"
+                font_size : mm(root.sizes.font-1)
+                background_color:0,0.7,0,1
+                on_release:
+                    root.show("common")
+            Button:
+                text : "Nadir Kelimeleri Göster"
+                text_size : self.size
+                valign:"center"
+                halign : "center"
+                font_size : mm(root.sizes.font-1)
+                background_color:0,0.7,0,1
+                on_release:
+                    root.show("rare")
+            Button:
+                text : "İleri Seviye Kelimeleri Göster"
+                text_size : self.size
+                valign:"center"
+                halign : "center"
+                font_size : mm(root.sizes.font-1)
+                background_color:0,0.7,0,1
+                on_release:
+                    root.show("advantage")
+
+<Settings_>:
+	name:"settings"
+	learnlimit_:learnlimit_
+	lbl:lbl
+    FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: '_bin/pics/mainbg.png'
+        Label:
+            text:"AYARLAR"
+            pos_hint: {"center_x":.5,"y":0.93}
+            font_size : mm(root.sizes.font)
+            size_hint : 0.15,0.1
+        Label :
+            text : "        Dil :"
+            pos_hint:{"x":0,"y":0.89}
+            font_size : mm(root.sizes.font)
+            text_size: self.size
+            size_hint : 0.5,0.5
+        Button:
+            pos_hint:{"x":0.25,"y":0.88}
+            size_hint : None,None
+            height: mm(root.sizes.picture-2)
+            width : mm(root.sizes.picture-2)
+            background_normal : "_bin/pics/turk.png"
+            background_down : "_bin/pics/turk.png"
+            on_release: root.set_lang("Turkish")
+        Button:
+            pos_hint:{"x":0.35,"y":0.88}
+            size_hint : None,None
+            height: mm(root.sizes.picture-2)
+            width : mm(root.sizes.picture-2)
+            background_normal : "_bin/pics/eng.png"
+            background_down : "_bin/pics/eng.png"
+            on_release : root.set_lang("English")
+        Label :
+            text: "İsim :"
+            pos_hint:{"x":0,"y":0.64}
+            text_size: self.size
+            font_size : mm(root.sizes.font)
+        TextInput:
+            id:user_name_
+            multiline: False
+            pos_hint:{"x":0.3,"y":0.64}
+            size_hint : 0.5,0.03
+        Label:
+            text: "Kelime öğrenmeyi istediğiniz dili seçiniz."
+            text_size: self.size
+            pos_hint:{"x":0,"y":0.55}
+            size_hint : 0.7,0.1
+            font_size : mm(root.sizes.font)
+        Button:
+            id:btn
+            on_parent: dropdown.dismiss()
+            text : "<Dil Seçiniz>"
+            pos_hint:{"x":0.75,"y":0.55}
+            background_color: 0,1,1,1
+            size_hint_x : 0.2
+            size_hint_y :None
+            height : 44
+            on_release: dropdown.open(self)
+
+        DropDown:
+            id: dropdown
+            on_select: btn.text = '{}'.format(args[1])
+            Button:
+                text: 'Almanca'
+                size_hint_x : 0.2
+                size_hint_y : None
+                height : 44
+                background_color: 0,1,1,1
+                on_release:
+                    dropdown.select(root.lgp.text('Almanca'))
+                    root.set_lang()
+        Label:
+            text : "Tek seferde öğrenilecek kelime sayısı giriniz"
+            pos_hint:{"x":0,"y":0.42}
+            text_size: self.size
+            font_size: mm(root.sizes.font)
+        TextInput:
+            id:learnlimit_
+            multiline: False
+            pos_hint:{"x":0.3,"y":0.64}
+            size_hint : 0.5,0.03
+        Button:
+            text : "Onayla"
+            pos_hint:{"center_x":0.7,"y":0.2}
+            background_color: 0,0.5,1,1
+            size_hint_x : 0.2
+            size_hint_y :None
+            height : 44
+            on_release:
+                root.load_conf(name = user_name_.text,dbname =btn.text)
+                app.root.current = "main"
+                app.root.transition.direction = "right"
+        Button:
+            text : "İptal"
+            pos_hint:{"center_x":0.3,"y":0.2}
+            background_color: 0,0.5,1,1
+            size_hint_x : 0.2
+            size_hint_y :None
+            height : 44
+            on_release:
+                app.root.current = "main"
+                app.root.transition.direction = "right"
+
+        Button:
+            text : "Kelime bilgini sıfırla "
+            font_size : mm(root.sizes.font)
+            size_hint : 0.4,0.1
+            background_color : 0,0.5,1,1
+            pos_hint: {"center_x":.5,"y":0.7}
+            on_release : root.reset_db()
+        Label:
+            id : lbl
+            text : ""
+            font_size : mm(root.sizes.font)
+            text_size : self.size
+            pos_hint: {"center_x":.5,"y":0.74}
+<Draft>:
+    name:"draft"
+    info:info
+    FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: '_bin/pics/mainbg.png'
+    GridLayout:
+        cols:1
+        Label:
+            id:info
+            text : ""
+            font_size : mm(root.sizes.font)
+            text_size : self.size
+        Label:
+            text: ""
+<ConfirmReset>:
+    cols : 1
+    Label :
+        text : root.lgp.text("Tüm bilgileriniz sıfırlanacak ve öğrenmeye baştan başlayacaksınız ! \nOnaylıyor musunuz ?")
+        text_size: self.width, None
+    Button:
+        text :root.lgp.text("Evet")
+        on_release : root.reset_db_ok()
+    Button:
+        text : root.lgp.text("Hayır")
+        on_release: root.reset_db_cancel()
+<Quiz_Select>:
+	cols : 1
+	Label:
+		text:root.lgp.text("Quiz zorluğunu seçiniz.\nOtomatik mod,bilgi seviyenize göre sınav oluşturacaktır. ")
+		text_size: self.width, None
+    Button :
+        text:root.lgp.text("Otomatik")
+
+        background_color:  0.3,0.4,0.5,1
+        on_release:
+            root.auto()
+
+    Button :
+        text:root.lgp.text("Temel")
+        background_color:  0.3,0.4,0.5,1
+        on_release:
+            root.basic()
+    Button:
+        text:root.lgp.text("Yaygın")
+        background_color:  0.3,0.4,0.5,1
+        on_release:
+            root.common()
+    Button:
+        text:root.lgp.text("Nadir")
+        background_color:  0.3,0.4,0.5,1
+        on_release:
+            root.rare()
+    Button:
+        text:root.lgp.text("İleri")
+        background_color:  0.3,0.4,0.5,1
+        on_release:
+            root.advantage()
+
+<Progress_Window>:
+    pbar_basic:pbar_basic
+    pbar_common:pbar_common
+    pbar_rare:pbar_rare
+    pbar_advantage:pbar_advantage
+    pbar_general:pbar_general
+    cols : 1
+    Label:
+        text : "TEMEL KELİMELER"
+        font_size : mm(root.sizes.font-1)
+        halign: "left"
+        text_size: self.size
+    Label:
+        text : "YAYGIN KULLANILAN"
+        font_size : mm(root.sizes.font-1)
+        halign: "left"
+        text_size: self.size
+    Label:
+        text:"NADİR KULLANILAN"
+        font_size : mm(root.sizes.font-1)
+        halign: "left"
+        text_size: self.size
+    Label:
+        text: "İLERİ SEVİYE"
+        font_size : mm(root.sizes.font-1)
+        halign: "left"
+        text_size: self.size
+    Label:
+        text :"GENEL İLERLEYİŞ"
+        font_size : mm(root.sizes.font-1)
+        halign: "left"
+        text_size: self.size
+    FloatLayout:
+        CircularProgressBar:
+            text_size : None,None
+            id : pbar_basic
+            thickness: 3
+            cap_style: "RouND"
+            progress_colour: "011"
+            background_colour: "000"
+            cap_precision: 3
+            max: 1000
+            min: 0
+            widget_size: 35
+            label: _label_basic
+            pos:250,515
+        CircularProgressBar:
+            id : pbar_common
+            thickness: 3
+            cap_style: "RouND"
+            progress_colour: "011"
+            background_colour: "000"
+            cap_precision: 100
+            max: 1000
+            min: 0
+            widget_size: 35
+            label: _label_common
+            pos:250,455
+        CircularProgressBar:
+            id : pbar_rare
+            thickness: 3
+            cap_style: "RouND"
+            progress_colour: "011"
+            background_colour: "000"
+            cap_precision: 100
+            max: 1000
+            min: 0
+            widget_size: 35
+            label: _label_rare
+            pos:250,400
+        CircularProgressBar:
+            id : pbar_advantage
+            thickness: 3
+            cap_style: "RouND"
+            progress_colour: "011"
+            background_colour: "000"
+            cap_precision: 100
+            max: 1000
+            min: 0
+            widget_size: 35
+            label: _label_advantage
+            pos : 250,340
+        CircularProgressBar:
+            id : pbar_general
+            thickness: 3
+            cap_style: "RouND"
+            progress_colour: "011"
+            background_colour: "000"
+            cap_precision: 100
+            max: 1000
+            min: 0
+            widget_size: 35
+            label: _label_advantage
+            pos:250,285
+<InfoBox>:
+    cols:1
+    infolbl:infolbl
+    Label:
+        id:infolbl
+        text : ""
+        font_size : mm(root.sizes.font)
+        text_size : self.size
+    Label:
+        text : ""
