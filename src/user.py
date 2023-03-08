@@ -9,14 +9,20 @@ def update_udb(db_, param=None):
         dcount = len(db_.fetchall(table))  # FETCH DATA COUNT
         for rowid in range(1, dcount + 1):
             for variable in variables:
-                results.append(db_.search(table=table, select_=variable, rowid=rowid))
+                results.append(
+                    db_.search(table=table, select_=variable, rowid=rowid))
             if results[0] != None:
-                progress, progress_percent = calculations(int(results[0][0]), int(results[1][0]), wg=table)
-                db_.update(table=table, rowid=rowid, percent=progress_percent, progress=progress)
+                progress, progress_percent = calculations(int(results[0][0]),
+                                                          int(results[1][0]),
+                                                          wg=table)
+                db_.update(table=table, rowid=rowid, percent=progress_percent,
+                           progress=progress)
             results = []
 
 
 global calculations
+
+
 def calculations(tc, fc, wg):
     global th
     global progress_
@@ -82,7 +88,8 @@ def cal_progress(udb):
     c_kwn = 0  # bilinen kelime sayısı
     for b_var in basic:
         try:
-            b_kwn += int(b_var[4]) / 100  # Her kelimeyi ilerleme yüzdesine göre 0 - 1 arasında değerlendirir.
+            b_kwn += int(b_var[
+                             4]) / 100  # Her kelimeyi ilerleme yüzdesine göre 0 - 1 arasında değerlendirir.
         except ZeroDivisionError:
             pass
     for c_var in common:
@@ -102,6 +109,9 @@ def cal_progress(udb):
         general_progress = (b_kwn + c_kwn) / 10
     except ZeroDivisionError:
         general_progress = 0
-    udb.execute_update(table="progress", where_=1, set_="basic", value=basic_progress)
-    udb.execute_update(table="progress", where_=1, set_="common", value=common_progress)
-    udb.execute_update(table="progress", where_=1, set_="general", value=general_progress)
+    udb.execute_update(table="progress", where_=1, set_="basic",
+                       value=basic_progress)
+    udb.execute_update(table="progress", where_=1, set_="common",
+                       value=common_progress)
+    udb.execute_update(table="progress", where_=1, set_="general",
+                       value=general_progress)

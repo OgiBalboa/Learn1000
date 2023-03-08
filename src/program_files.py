@@ -2,7 +2,7 @@ import os
 class program_files:
     def __init__(self):
         self.main = os.getcwd()
-        os.chdir("_bin")
+        os.chdir("src")
         self.bin = os.getcwd()
         self.version = self.bin+"/version.txt"
         os.chdir("pics")

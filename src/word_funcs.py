@@ -1,11 +1,15 @@
 from database import database
 from random import randint
+
 global check_word
 global get_words
 global random_word
+
+
 def check_word(db_, table, rowid):
     result = db_.search(table=table, select_="*", rowid=rowid)
     return result
+
 
 def get_words(db_, table):
     rowidlist = ["NULL"]
@@ -15,6 +19,7 @@ def get_words(db_, table):
         rowidlist.append(i)
     reglist = rowidlist
     return words, rowidlist, reglist
+
 
 def random_word(wordlist, rowidlist, reglist=None, trlist=None, tablist=None):
     if reglist == None:
@@ -36,6 +41,7 @@ def random_word(wordlist, rowidlist, reglist=None, trlist=None, tablist=None):
         translation = trlist[reg]
         table = tablist[reg]
         return word, translation, rowid, table, reg
+
 
 def auto_generate(udb_, db_, learnlimit=20, param=None):
     global wordlist
@@ -97,8 +103,7 @@ def auto_generate(udb_, db_, learnlimit=20, param=None):
     return wordlist, trlist, tablist, rowidlist, reglist
 
 
-def Capital(text,lang = None):
-
+def Capital(text, lang=None):
     if lang != "Turkish":
         return text.title()
     text = text.split(" ")
